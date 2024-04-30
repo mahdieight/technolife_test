@@ -19,7 +19,7 @@ You can filter orders using the following parameters:
 ## Example of Filtering
 Here is an example of filtering orders with all parameters:
 
-`http://{base_url}:{app_port}/api/backoffice/orders?status=doing&national_code=0015481069&amount[min]=100&amount[max]=900000&mobile_number=09122760658`
+`http://{base_url}:{app_port}/api/backoffice/orders?status=doing&national_code=0015481069&min=100&max=900000&mobile_number=09122760658`
 
 ## Quick Start
 To avoid entering data manually, we have prepared factories and seeders for you. You can populate the users and orders tables using the following command.
@@ -28,3 +28,8 @@ To avoid entering data manually, we have prepared factories and seeders for you.
 
 ## Powered by Docker
 Don't get caught up in details :) To launch the project quickly, you can use the docker-compose file provided in this project to bring the application up as fast as possible and view the output.
+
+## Testing with PHPUnit
+I tried to write some sample tests to validate the functionality of the endpoint. Although I could have provided a better approach in this section, I personally love the TDD approach. But because my goal was to provide the best output in the limited time I had, I abandoned this approach.
+
+`php artisan test`
