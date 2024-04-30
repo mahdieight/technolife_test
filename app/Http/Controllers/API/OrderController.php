@@ -21,20 +21,11 @@ class OrderController extends Controller implements OrderControllerInterface
         $mobile_number = $request->validated('mobile_number');
         $national_code = $request->validated('national_code');
 
-
-        $orders = Order::when($status, function (Builder $query) use ($status) {
-            $query->whereStatus($status);
-        })
+        $orders = Order::query()->statusFilter($status)
             ->when(($national_code || $mobile_number), function (Builder $query) use ($national_code, $mobile_number) {
                 $query->whereHas('user', function (Builder $userQuery) use ($national_code, $mobile_number) {
-
-                    $userQuery->when($national_code,  function (Builder $userQuery) use ($national_code) {
-                        $userQuery->where('national_code', 'LIKE', "%$national_code%");
-                    });
-
-                    $userQuery->when($mobile_number,  function (Builder $userQuery) use ($mobile_number) {
-                        $userQuery->where('mobile_number', 'LIKE', "%$mobile_number%");
-                    });
+                    $userQuery->likeFilter('national_code' , $national_code);
+                    $userQuery->likeFilter('mobile_number' , $mobile_number);
                 });
             })
             ->amountFilter(!is_null($min_amount), 'amount', $min_amount, '>=')
