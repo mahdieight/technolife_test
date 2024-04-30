@@ -2,6 +2,8 @@
 
 namespace App\Services;
 
+use Illuminate\Support\Facades\Lang;
+
 class ResponseService
 {
     public int $status = 201;
@@ -18,7 +20,7 @@ class ResponseService
 
     public function message(string $message): ResponseService
     {
-        $this->message = __($message);
+        $this->message = (Lang::has($message) ? __($message) : $message);
         return $this;
     }
 

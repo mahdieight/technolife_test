@@ -5,7 +5,7 @@ This is a test project for the technical assessment of the company TechnoLife. I
 ## API Endpoint for Orders
 To access the list of orders, use the following API endpoint:
 
-`http://127.0.0.1:8000/api/orders`
+`http://{base_url}:{app_port}/api/backoffice/orders`
 
 
 
@@ -19,7 +19,7 @@ You can filter orders using the following parameters:
 ## Example of Filtering
 Here is an example of filtering orders with all parameters:
 
-`http://127.0.0.1:8000/api/orders?status=doing&national_code=0015481069&amount[min]=100&amount[max]=900000&mobile_number=09122760658`
+`http://{base_url}:{app_port}/api/backoffice/orders?status=doing&national_code=0015481069&amount[min]=100&amount[max]=900000&mobile_number=09122760658`
 
 ## Quick Start
 To avoid entering data manually, we have prepared factories and seeders for you. You can populate the users and orders tables using the following command.
