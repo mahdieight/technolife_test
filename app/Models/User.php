@@ -51,9 +51,9 @@ class User extends Authenticatable
         return $this->hasMany(Order::class);
     }
 
-    public function scopeLikeFilter(Builder $query, $condition , $column, $value)
+    public function scopeLikeFilter(Builder $query , $column, $value)
     {
-        $query->when($condition, function (Builder $subQuery) use ($column, $value) {
+        $query->when($value, function (Builder $subQuery) use ($column, $value) {
             $subQuery->where($column, 'LIKE', "%$value%");
         });
     }
