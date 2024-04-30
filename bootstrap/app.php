@@ -28,6 +28,6 @@ return Application::configure(basePath: dirname(__DIR__))
                 $e->getMessage(),
                 json_encode($e->getTrace(), JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)
             );
-            User::whereEmail('admin@admin.ir')->first()->notify($reportExceptionNotification);
+            User::whereEmail('admin@admin.ir')->first()?->notify($reportExceptionNotification);
         });
     })->create();
