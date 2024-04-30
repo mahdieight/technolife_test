@@ -39,10 +39,6 @@ class ReportExceptionNotification extends Notification implements ShouldQueue
         return (new ReportExceptionMail($this->message, $this->trace))->to($notifiable->email);
     }
 
-    public function toSms(object $notifiable)
-    {
-        return SmsChannel::send($notifiable , $this);
-    }
 
     /**
      * Get the array representation of the notification.
