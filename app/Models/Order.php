@@ -17,10 +17,17 @@ class Order extends Model
         return $this->belongsTo(User::class);
     }
 
-    public function scopeAmountFilter(Builder $query, $column, $value, $condition, $operator = "=")
+    public function scopeAmountFilter(Builder $query, $condition,  $column, $value, $operator = "=")
     {
         $query->when($condition, function (Builder $subquery) use ($column, $value, $operator) {
             $subquery->where($column, $operator, $value);
+        });
+    }
+
+    public function scopeStatusFilter(Builder $query, $value)
+    {
+        $query->when($value, function (Builder $subquery) use ($value) {
+            $subquery->whereStatus($value);
         });
     }
 }
