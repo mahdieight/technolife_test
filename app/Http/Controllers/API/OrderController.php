@@ -21,15 +21,15 @@ class OrderController extends Controller implements OrderControllerInterface
         $mobile_number = $request->validated('mobile_number');
         $national_code = $request->validated('national_code');
 
-        $orders = Order::query()->statusFilter($status)
+        $orders = Order::statusFilter($status)
             ->when(($national_code || $mobile_number), function (Builder $query) use ($national_code, $mobile_number) {
                 $query->whereHas('user', function (Builder $userQuery) use ($national_code, $mobile_number) {
-                    $userQuery->likeFilter('national_code' , $national_code);
-                    $userQuery->likeFilter('mobile_number' , $mobile_number);
+                    $userQuery->likeFilter('national_code', $national_code);
+                    $userQuery->likeFilter('mobile_number', $mobile_number);
                 });
             })
-            ->amountFilter(!is_null($min_amount), 'amount', $min_amount, '>=')
-            ->amountFilter(!is_null($max_amount), "amount", $max_amount, "<=");
+            ->amountFilter($min_amount, '>=')
+            ->amountFilter($max_amount, "<=");
 
 
         return Response::message('order.messages.list_of_orders_has_been_received_successfully')->data(new OrderCollection($orders->paginate()))->status(201)->send();
