@@ -8,7 +8,7 @@ class ResponseService
 {
     public int $status = 201;
     public string $message = 'success';
-    public array $data = [];
+    public mixed $data = [];
     public array $errors = [];
 
     public function status(int $status): ResponseService
@@ -27,7 +27,7 @@ class ResponseService
 
     public function data($data): ResponseService
     {
-        $this->data = is_array($data) ? $data : [$data];
+        $this->data = $data;
         return $this;
     }
 
