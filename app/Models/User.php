@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -46,8 +46,15 @@ class User extends Authenticatable
         ];
     }
 
-    public function orders() : HasMany
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function scopeLikeFilter(Builder $query, $condition , $column, $value)
+    {
+        $query->when($condition, function (Builder $subQuery) use ($column, $value) {
+            $subQuery->where($column, 'LIKE', "%$value%");
+        });
     }
 }
