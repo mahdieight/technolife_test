@@ -26,7 +26,7 @@ class OrderIndexRequest extends FormRequest
         return [
             'status' => ['nullable', 'string', Rule::in(OrderStatusEnum::values())],
             'amount.min' => 'nullable|integer|min:' . config('rules.order.amount.min'),
-            'amount.max' => 'nullable|integer|gt:min_amount|max:' .  config('rules.order.amount.min'),
+            'amount.max' => 'nullable|integer|max:' .  config('rules.order.amount.max'),
             'mobile_number' => 'nullable|numeric|max_digits:'  . config('rules.order.mobile_number.max_digits'),
             'national_code' => 'nullable|numeric|digits:'  . config('rules.order.national_code.digits'),
         ];
