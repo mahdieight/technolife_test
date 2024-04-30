@@ -16,10 +16,11 @@ class OrderController extends Controller implements OrderControllerInterface
     public function index(OrderIndexRequest $request)
     {
         $status = $request->validated('status');
-        $min_amount = $request->validated('amount.min');
-        $max_amount = $request->validated('amount.max');
+        $min_amount = $request->validated('min');
+        $max_amount = $request->validated('max');
         $mobile_number = $request->validated('mobile_number');
         $national_code = $request->validated('national_code');
+
 
         $orders = Order::when($status, function (Builder $query) use ($status) {
             $query->whereStatus($status);
@@ -36,13 +37,10 @@ class OrderController extends Controller implements OrderControllerInterface
                     });
                 });
             })
-            ->when(!is_null($min_amount), function (Builder $query) use ($min_amount) {
-                $query->where('amount', '>=', $min_amount);
-            })
-            ->when(!is_null($max_amount), function (Builder $query) use ($max_amount) {
-                $query->where('amount', '<=', $max_amount);
-            });
-            
+            ->amountFilter(!is_null($min_amount), 'amount', $min_amount, '>=')
+            ->amountFilter(!is_null($max_amount), "amount", $max_amount, "<=");
+
+
         return Response::message('order.messages.list_of_orders_has_been_received_successfully')->data(new OrderCollection($orders->paginate()))->status(201)->send();
     }
 }
