@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ForceJsonResponse;
 use App\Jobs\ReportExceptionMailJob;
 use App\Notifications\ReportExceptionNotification;
 use Illuminate\Foundation\Application;
@@ -19,7 +20,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->append(ForceJsonResponse::class);
     })
     ->withExceptions(function (Exceptions $exceptions) {
 
