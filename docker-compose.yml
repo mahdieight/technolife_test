@@ -1,0 +1,80 @@
+version: "3.9"
+
+services:
+  #-------------------------------------------#
+  #               Nginx server                #
+  #-------------------------------------------#
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "${NGINX_PORT:-80}:80"
+    volumes:
+      - "./nginx/conf.d/pagesvc.conf:/etc/nginx/conf.d/default.conf"
+      - "./:/var/www/html/"
+      - "nginx_log:/var/log/nginx/"
+    container_name: pagesvc_nginx
+    hostname: pagesvc_nginx
+    restart: unless-stopped
+    networks:
+      - pagesvc_net
+    depends_on:
+      mysql:
+        condition: service_healthy
+        restart: true
+      php:
+        condition: service_started
+
+  #-------------------------------------------#
+  #               php-fpm server              #
+  #-------------------------------------------#
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: pagesvc:latest
+    container_name: pagesvc
+    hostname: pagesvc
+    restart: unless-stopped
+    networks:
+      - pagesvc_net
+    volumes:
+      - "./php/php.ini:/usr/local/etc/php/php.ini"
+      - "./php/opcache.ini:/usr/local/etc/php/conf.d/opcache.ini"
+      - "./:/var/www/html/"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  #-------------------------------------------#
+  #               Mysql server                #
+  #-------------------------------------------#
+  mysql:
+    image: 'mysql:8.3.0'
+    ports:
+       - '${MYSQL_PORT:-37306}:3306'
+    container_name: pagesvc_mysql
+    hostname: pagesvc_mysql
+    restart: unless-stopped
+    environment:
+       MYSQL_ROOT_PASSWORD: 'secret'
+       MYSQL_DATABASE: 'pagesvc_db'
+       MYSQL_USER: 'pagesvc'
+       MYSQL_PASSWORD: 'password'
+    volumes:
+        - 'mysql:/var/lib/mysql/'
+    networks:
+      - pagesvc_net
+    healthcheck:
+      test:
+        - CMD
+        - mysqladmin
+        - ping
+        - '-p secret'
+      retries: 3
+      timeout: 5s
+
+networks:
+  pagesvc_net:
+volumes:
+  mysql:
+  nginx_log:
