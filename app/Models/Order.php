@@ -12,15 +12,21 @@ class Order extends Model
 {
     use HasFactory, SoftDeletes;
 
+    protected $fillable = [
+        "user_id",
+        "amount",
+        "status"
+    ];
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
 
-    public function scopeAmountFilter(Builder $query, $condition,  $column, $value, $operator = "=")
+    public function scopeAmountFilter(Builder $query, $value, $operator = "=")
     {
-        $query->when($condition, function (Builder $subquery) use ($column, $value, $operator) {
-            $subquery->where($column, $operator, $value);
+        $query->when(!is_null($value), function (Builder $subquery) use ($value, $operator) {
+            $subquery->whereAmount($operator, $value);
         });
     }
 
